@@ -1,0 +1,94 @@
+@UserManagementAPI_HostAddress = http://localhost:5261
+
+### Get all users
+GET {{UserManagementAPI_HostAddress}}/api/users
+Accept: application/json
+
+### Get user by id
+GET {{UserManagementAPI_HostAddress}}/api/users/1
+Accept: application/json
+
+### Create user
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "firstName": "Carol",
+  "lastName": "Williams",
+  "email": "carol@techhive.com",
+  "department": "Finance"
+}
+
+### Update user
+PUT {{UserManagementAPI_HostAddress}}/api/users/1
+Content-Type: application/json
+
+{
+  "firstName": "Alice",
+  "lastName": "Smith",
+  "email": "alice.smith@techhive.com",
+  "department": "Engineering"
+}
+
+### Delete user
+DELETE {{UserManagementAPI_HostAddress}}/api/users/2
+
+###
+
+### --- Validation cases (should fail) ---
+
+### Empty fields -> 400
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "firstName": "   ",
+  "lastName": "",
+  "email": "",
+  "department": ""
+}
+
+### Invalid email -> 400
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "firstName": "Dan",
+  "lastName": "Brown",
+  "email": "dan@invalid",
+  "department": "IT"
+}
+
+### Duplicate email (case-insensitive) -> 409
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "firstName": "Other",
+  "lastName": "Bob",
+  "email": "BOB@techhive.com",
+  "department": "IT"
+}
+
+### Malformed JSON -> 400
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{ "firstName": "Eve",
+
+### Body id does not match route id -> 400
+PUT {{UserManagementAPI_HostAddress}}/api/users/1
+Content-Type: application/json
+
+{
+  "id": 5,
+  "firstName": "Alice",
+  "lastName": "Smith",
+  "email": "alice@techhive.com",
+  "department": "IT"
+}
+
+### Non-existent user -> 404
+DELETE {{UserManagementAPI_HostAddress}}/api/users/999
+
+###
